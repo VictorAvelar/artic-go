@@ -1,0 +1,31 @@
+checks:
+  go: true
+filter:
+  excluded_paths:
+    - "artic/*_test.go"
+    - "artic/testdata/"
+    - "*.md"
+    - "LICENSE"
+    - ".github/**/*.*"
+    - ".github/*.*"
+    - "Dockerfile"
+    - "Makefile"
+    - "docs/*.md"
+build:
+  nodes:
+    analysis:
+      project_setup:
+        override:
+          - "true"
+      environment:
+        go:
+          version: go1.15
+      tests:
+        override:
+          - go-scrutinizer-run
+          - govet-run
+          - golint-run
+          - command: "go test ./... -coverprofile=cover.out"
+            coverage:
+              file: "cover.out"
+              format: "go-cc"
